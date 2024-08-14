@@ -40,7 +40,13 @@ class ArticleResource extends Resource
                     ),
                 TextInput::make('author')
                     ->placeholder('Author'),
-                FileUpload::make('image'),
+                FileUpload::make('image')
+                    ->image()
+                    ->imageEditor()
+                    ->imageCropAspectRatio('3:2')
+                    ->imageResizeTargetWidth('720')
+                    ->imageResizeTargetHeight('720')
+                    ->maxSize(5000),
                 RichEditor::make('content')
                     ->columnSpan(2),
                 Select::make('status')->options([
