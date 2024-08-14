@@ -34,15 +34,21 @@ class MemberResource extends Resource
                 TextInput::make('designation')
                     ->required()
                     ->placeholder('Enter Designation'),
-                TextInput::make('tw_url')
+                TextInput::make('tw_url')->url()
                     ->label('Twitter URL')
                     ->placeholder('Twitter URL'),
-                TextInput::make('fb_url')
+                TextInput::make('fb_url')->url()
                     ->label('Facebook URL')
                     ->placeholder('Facebook URL'),
-                TextInput::make('in_url')
+                TextInput::make('in_url')->url()
                     ->label('Instagram URL')
-                    ->placeholder('LinkedIn URL'),
+                    ->placeholder('Instagram URL'),
+                TextInput::make('yt_url')->url()
+                    ->label('Youtube URL')
+                    ->placeholder('Youtube URL'),
+                TextInput::make('tt_url')->url()
+                    ->label('Tiktok URL')
+                    ->placeholder('Tiktok URL'),
                 FileUpload::make('image')
                     ->image()
                     ->imageEditor()

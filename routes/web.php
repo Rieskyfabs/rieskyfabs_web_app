@@ -21,3 +21,4 @@ Route::get('/', ShowHome::class)->name('home');
 Route::get('/services', ShowServicePage::class)->name('servicesPage');
 Route::get('/services/{id}', ShowService::class)->name('servicePage');
 Route::get('/team', ShowTeamPage::class)->name('teamPage');
+Route::get('/blog', ShowTeamPage::class)->name('teamPage');
