@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\ServiceResource\Pages;
+namespace App\Filament\Resources\FaqResource\Pages;
 
-use App\Filament\Resources\ServiceResource;
+use App\Filament\Resources\FaqResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateService extends CreateRecord
+class CreateFaq extends CreateRecord
 {
-    protected static string $resource = ServiceResource::class;
+    protected static string $resource = FaqResource::class;
 
     protected function getRedirectUrl(): string
     {
@@ -20,7 +20,7 @@ class CreateService extends CreateRecord
     {
         return Notification::make()
             ->success()
-            ->title('Service Created')
-            ->body('The service been created successfully');
+            ->title('Faq Created')
+            ->body('The faq been created successfully');
     }
 }

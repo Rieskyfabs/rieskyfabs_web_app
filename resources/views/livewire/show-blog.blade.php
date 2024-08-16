@@ -5,7 +5,7 @@
                 <div class="col-8 mx-auto text-center">
                     <h2 class="mb-3 text-capitalize">Blog</h2>
                     <ul class="list-inline breadcrumbs text-capitalize" style="font-weight:500">
-                        <li class="list-inline-item"><a href="{{ route('home') }}">Home</a>
+                        <li class="list-inline-item"><a href="{{ route('home') }}" wire:navigate>Home</a>
                         </li>
                         <li class="list-inline-item">/ &nbsp; Blog
                         </li>
@@ -48,16 +48,12 @@
                                                 @if($article->image != '')
                                                     <img loading="lazy" decoding="async" src="{{ asset('storage/'. $article->image) }}" alt="Post Thumbnail">   
                                                 @endif
-                                                {{-- @if(isset($article) && $article->image != '')
-                                                    <img loading="lazy" decoding="async" src="{{ asset('storage/'. $article->image) }}" alt="Post Thumbnail">
-                                                @endif --}}
-
                                             </div>
                                             <div class="pt-4">
                                                 <p class="mb-3">{{ \Carbon\Carbon::parse($article->created_at)->format('d M, Y') }}</p>
-                                                <h2 class="h4"><a class="text-black" href="blog-details.html">{{$article->title}}.</a></h2>
-                                                {{-- <p>{{ \Illuminate\Support\Str::limit($article->content, 20) }}</p> --}}
-                                                <a href="blog-details.html" class="text-primary fw-bold" aria-label="Read the full article by clicking here">Read More</a>
+                                                <h2 class="h4"><a class="text-black" wire:navigate href="{{ route('blogDetail', $article->id) }}">{{$article->title}}</a></h2>
+                                                <p>{!! \Illuminate\Support\Str::limit(strip_tags($article->content), 120) !!}</p>
+                                                <a wire:navigate href="{{ route('blogDetail', $article->id) }}" class="text-primary fw-bold" aria-label="Read the full article by clicking here">Read More</a>
                                             </div>
                                         </article>
                                     </div>
@@ -75,16 +71,12 @@
                     <div class="widget widget-categories">
                         <h5 class="widget-title"><span>Category</span></h5>
                         <ul class="list-unstyled widget-list">			
-                            {{-- @if ($categories->isNotEmpty())
-                                @foreach ($categories as $category)
-                                    <li><a wire:navigate href="{{ route('blog'). '?categorySlug='.$category->slug}}">{{ $category->name }}<small class="ml-auto"> ({{ $category->articles->count() }})</small></a></li>
-                                @endforeach
-                            @endif --}}
                             @if ($categories->isNotEmpty())
                                 @foreach ($categories as $category)
                                     @if ($category->articles->count() > 0)
-                                        <li>
-                                            <a wire:navigate href="{{ route('blog'). '?categorySlug='.$category->slug }}">
+                                        <li class="nav-item">
+                                            <a wire:navigate href="{{ route('blog'). '?categorySlug='.$category->slug }}"
+                                            class="nav-link {{ request('categorySlug') == $category->slug ? 'bg-primary text-white' : '' }}">
                                                 {{ $category->name }}
                                                 <small class="ml-auto"> ({{ $category->articles->count() }})</small>
                                             </a>
@@ -92,11 +84,16 @@
                                     @endif
                                 @endforeach
                             @endif
-
                         </ul>
+                        <!-- Conditionally Render Reset Filter Button -->
+                        @if (request()->has('categorySlug') || request()->has('tag') || request()->has('search'))
+                            <div class="mt-3">
+                                <a href="{{ route('blog') }}" class="btn btn-secondary">Reset Filter</a>
+                            </div>
+                        @endif
                     </div>
                     <!-- tags -->
-                    <div class="widget widget-tags">
+                    {{-- <div class="widget widget-tags">
                         <h4 class="widget-title"><span>Tags</span></h4>
                         <ul class="list-inline widget-list widget-list-inline taxonomies-list">
                             <li class="list-inline-item"><a href="#!">Booth</a>
@@ -114,7 +111,7 @@
                             <li class="list-inline-item"><a href="#!">Video</a>
                             </li>
                         </ul>
-                    </div>
+                    </div> --}}
                     <!-- latest post -->
                     <div class="widget">
                         <h5 class="widget-title"><span>Latest Article</span></h5>
@@ -123,17 +120,17 @@
                             @foreach ( $latestArticles as $latestArticle )
                                 <ul class="list-unstyled widget-list">
                                     <li class="d-flex widget-post align-items-center">
-                                        <a class="text-black" href="/blog/elements/">
+                                        <a class="text-black" wire:navigate href="{{ route('blogDetail', $latestArticle->id) }}">
                                             <div class="widget-post-image flex-shrink-0 me-3">
                                                 @if($article->image != '')
-                                                    <img loading="rounded" loading="lazy" decoding="async" src="{{ asset('storage/'. $article->image) }}" alt="Post Thumbnail">   
+                                                    <img loading="rounded" loading="lazy" decoding="async" src="{{ asset('storage/'. $latestArticle->image) }}" alt="Post Thumbnail">   
                                                 @endif  
                                                 {{-- <img class="rounded" loading="lazy" decoding="async" src="images/blog/post-4.jpg" alt="Post Thumbnail"> --}}
                                             </div>
                                         </a>
                                         <div class="flex-grow-1">
-                                            <h5 class="h6 mb-0"><a class="text-black" href="blog-details.html">{{ $latestArticle->title }}</a></h5>
-                                            <small>{{ \Carbon\Carbon::parse($article->created_at)->format('d M, Y') }}</small>
+                                            <h5 class="h6 mb-0"><a class="text-black" wire:navigate href="{{ route('blogDetail', $latestArticle->id) }}">{{ $latestArticle->title }}</a></h5>
+                                            <small>{{ \Carbon\Carbon::parse($latestArticle->created_at)->format('d M, Y') }}</small>
                                         </div>
                                     </li>
                                 </ul>

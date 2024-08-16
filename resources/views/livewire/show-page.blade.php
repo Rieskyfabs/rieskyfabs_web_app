@@ -3,11 +3,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-8 mx-auto text-center">
-                    <h2 class="mb-3 text-capitalize">Our Team</h2>
+                    <h2 class="mb-3 text-capitalize">{{ $page->title }}</h2>
                     <ul class="list-inline breadcrumbs text-capitalize" style="font-weight:500">
-                        <li class="list-inline-item"><a href="{{ route('home') }}">Home</a>
+                        <li class="list-inline-item"><a wire:navigate href="{{ route('home') }}">Home</a>
                         </li>
-                        <li class="list-inline-item">/ &nbsp; Our Team
+                        <li class="list-inline-item">/ &nbsp; {{ $page->title }}
                         </li>
                     </ul>
                 </div>
@@ -33,29 +33,34 @@
             </svg>
         </div>
     </section>
-
-
-    <section class="section teams">
+    <section class="section">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12">
-                    <div class="section-title text-center">
-                        <p class="text-primary text-uppercase fw-bold mb-3">Questions You Have</p>
-                        <h1>People Behind Us</h1>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing . egestas
-                            <br>cursus pellentesque dignissim dui, congue. Vel etiam ut</p>
+            @if ($page->image != "")
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-lg-7">
+                        <div class="section-title">
+                            {!! $page->content !!}
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mt-5 mt-lg-0">
+                        {{-- <img loading="lazy" decoding="async" src="images/about/about-11.jpg" alt="Business Loans &lt;br&gt; For Daily Expenses" class="rounded w-100"> --}}
+                        <img loading="lazy" decoding="async" src="{{ asset('storage/'.$page->image) }}" alt="">
                     </div>
                 </div>
-            </div>
-            <div class="row position-relative justify-content-center">
-                @if ($members->isNotEmpty())
-                    @foreach ($members as $member)
-                        <div class="col-xl-3 col-lg-4 col-md-6 mt-4">
-                            <x-team-card :member="$member" />
+            @else
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-lg-12">
+                        <div class="section-title">
+                            {!! $page->content !!}
                         </div>
-                    @endforeach
-                @endif
-            </div>
+                    </div>
+                    <div class="col-lg-4 mt-5 mt-lg-0">
+                        <img loading="lazy" decoding="async" src="{{ asset('storage/'.$page->image) }}" alt=""> 
+                    </div>
+                </div>
+            @endif
+            
         </div>
     </section>
 </main>

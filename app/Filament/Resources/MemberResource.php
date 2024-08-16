@@ -22,8 +22,13 @@ class MemberResource extends Resource
 {
     protected static ?string $model = Member::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Preferences';
 
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    protected static ?string $navigationLabel = 'Members';
+
+    protected static ?int $navigationSort = 1;
     public static function form(Form $form): Form
     {
         return $form
@@ -74,7 +79,18 @@ class MemberResource extends Resource
             ->columns([
                 ImageColumn::make('image')->width(100),
                 TextColumn::make('name'),
-                TextColumn::make('designation'),      
+                TextColumn::make('designation'),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        '1' => 'success',
+                        '0' => 'danger',
+                    })
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        '1' => 'Active',
+                        '0' => 'Block',
+                        default => 'Draft',
+                    }),
             ])
             ->filters([
                 //

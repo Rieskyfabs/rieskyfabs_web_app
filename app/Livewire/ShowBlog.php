@@ -37,7 +37,7 @@ class ShowBlog extends Component
         $latestArticles = Article::orderBy('created_at', 'DESC')
             ->where('status', 1)
             ->get()
-            ->take(3);
+            ->take(4);
 
         return view('livewire.show-blog', [
             'articles' => $articles,  

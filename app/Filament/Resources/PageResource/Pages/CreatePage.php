@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\ServiceResource\Pages;
+namespace App\Filament\Resources\PageResource\Pages;
 
-use App\Filament\Resources\ServiceResource;
+use App\Filament\Resources\PageResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateService extends CreateRecord
+class CreatePage extends CreateRecord
 {
-    protected static string $resource = ServiceResource::class;
+    protected static string $resource = PageResource::class;
 
     protected function getRedirectUrl(): string
     {
@@ -20,7 +20,7 @@ class CreateService extends CreateRecord
     {
         return Notification::make()
             ->success()
-            ->title('Service Created')
-            ->body('The service been created successfully');
+            ->title('Page Created')
+            ->body('The page been created successfully');
     }
 }

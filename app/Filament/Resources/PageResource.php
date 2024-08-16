@@ -2,48 +2,57 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Models\Category;
+use App\Filament\Resources\PageResource\Pages;
+use App\Filament\Resources\PageResource\RelationManagers;
+use App\Models\Page;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Awcodes\FilamentBadgeableColumn\Components\Badge;
+use Awcodes\FilamentBadgeableColumn\Components\BadgeField;
+use Awcodes\FilamentBadgeableColumn\Components\BadgeableColumn;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Forms\Set;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use illuminate\Support\Str;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CategoryResource extends Resource
+class PageResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Page::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Preferences';
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $navigationLabel = 'Faqs';
 
-    protected static ?string $navigationLabel = 'Categories';
-
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')->required()->placeholder('Name')
-                ->live()
-                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                TextInput::make('slug')->required()->placeholder('Slug'),
+                TextInput::make('title')->required()->placeholder('Title'),
+                RichEditor::make('content')->columnSpan(2),
+                FileUpload::make('image')
+                    ->columnSpan(2)
+                    ->image()
+                    ->imageEditor()
+                    ->imageCropAspectRatio('3:4')
+                    ->imageResizeTargetWidth('1280')
+                    ->imageResizeTargetHeight('1280')
+                    ->maxSize(5000),
                 Select::make('status')->options([
                     1 => 'Active',
-                    0 => 'Block',
-                ])
-                ->native(false),
-                
+                    0 => 'Block'
+                ])->required()->native(false)
             ]);
     }
 
@@ -51,11 +60,11 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('slug'),
+                // ImageColumn::make('image')->width(100),
+                TextColumn::make('id'),
+                TextColumn::make('title'),
                 TextColumn::make('created_at')
-                    ->label('Published At'),
-                TextColumn::make('status')
+                    ->label('Published At'),TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         '1' => 'success',
@@ -66,6 +75,8 @@ class CategoryResource extends Resource
                         '0' => 'Block',
                         default => 'Draft',
                     }),
+
+                
             ])
             ->filters([
                 //
@@ -93,9 +104,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListPages::route('/'),
+            'create' => Pages\CreatePage::route('/create'),
+            'edit' => Pages\EditPage::route('/{record}/edit'),
         ];
     }    
 }

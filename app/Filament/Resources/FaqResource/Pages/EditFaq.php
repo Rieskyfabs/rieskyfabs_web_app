@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\ServiceResource\Pages;
+namespace App\Filament\Resources\FaqResource\Pages;
 
-use App\Filament\Resources\ServiceResource;
+use App\Filament\Resources\FaqResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
-class EditService extends EditRecord
+class EditFaq extends EditRecord
 {
-    protected static string $resource = ServiceResource::class;
+    protected static string $resource = FaqResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -27,7 +27,7 @@ class EditService extends EditRecord
     {
         return Notification::make()
             ->success()
-            ->title('Service Updated')
-            ->body('The service been updated successfully');
+            ->title('Faq Updated')
+            ->body('The faq been updated successfully');
     }
 }

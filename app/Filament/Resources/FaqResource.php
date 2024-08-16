@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ServiceResource\Pages;
-use App\Filament\Resources\ServiceResource\RelationManagers;
-use App\Models\Service;
+use App\Filament\Resources\FaqResource\Pages;
+use App\Filament\Resources\FaqResource\RelationManagers;
+use App\Models\Faq;
 use Filament\Forms;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -12,7 +12,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -20,34 +19,28 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ServiceResource extends Resource
+class FaqResource extends Resource
 {
-    protected static ?string $model = Service::class;
+    protected static ?string $model = Faq::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Menus';
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+    protected static ?string $navigationLabel = 'Faqs';
 
-    protected static ?string $navigationLabel = 'Services';
-
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('title')->required(),
-                TextInput::make('icon_class'),
-                TextInput::make('short_desc')
-                ->label('Short Description')
-                ->required(),
-                RichEditor::make('description')->columnSpan(2),
-                Select::make('status')
-                ->options([
+                TextInput::make('question')->placeholder('Question')->required(),
+                RichEditor::make('answer')->required()->columnSpan(2),
+                Select::make('status')->options([
                     1 => 'Active',
                     0 => 'Block'
-                ])
-                ->native(false)
+                ])->required()->native(false)
             ]);
     }
 
@@ -55,10 +48,7 @@ class ServiceResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('icon_class'),
-                TextColumn::make('title')->searchable(),
-                TextColumn::make('short_desc')
-                    ->label('Short Description')
+                TextColumn::make('question')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->label('Published At'),
@@ -82,10 +72,10 @@ class ServiceResource extends Resource
                 ])
                 ->query(function (Builder $query, array $data): Builder {
                     return $query
-                        ->when(
-                            $data['created_from'],
-                            fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                        )
+                    ->when(
+                        $data['created_from'],
+                        fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                    )
                         ->when(
                             $data['created_until'],
                             fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
@@ -121,9 +111,9 @@ class ServiceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListServices::route('/'),
-            'create' => Pages\CreateService::route('/create'),
-            'edit' => Pages\EditService::route('/{record}/edit'),
+            'index' => Pages\ListFaqs::route('/'),
+            'create' => Pages\CreateFaq::route('/create'),
+            'edit' => Pages\EditFaq::route('/{record}/edit'),
         ];
     }    
 }
